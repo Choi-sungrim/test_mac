@@ -21,6 +21,7 @@ import { Test2Module } from './test2/test2.module';
       }),
       inject: [ConfigService],
     }),
+    //동일 connection에서의 스키마 여러개 연결 TEST
     MongooseModule.forRootAsync({
       connectionName: 'test_mac_2',
       useFactory: (configService: ConfigService) => ({
