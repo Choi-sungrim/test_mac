@@ -13,10 +13,10 @@ export class Board {
   @Prop()
   create_by: string;
   @Prop({ required: false })
-  modify_by: string;
+  modify_by?: string;
   @Prop({ default: Date.now })
-  create_at: Date;
+  create_at?: Date;
   @Prop({ required: false })
-  modify_at: Date;
+  modify_at?: Date;
 }
 export const BoardSchema = SchemaFactory.createForClass(Board);

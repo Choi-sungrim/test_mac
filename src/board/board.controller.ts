@@ -34,7 +34,6 @@ export class BoardController {
           content: 'string',
           title: 'string',
           create_by: 'string',
-          create_at: 'Date ?',
         },
       },
     },
@@ -67,7 +66,6 @@ export class BoardController {
           content: 'string',
           title: 'string',
           modify_by: 'string',
-          modify_at: 'Date ?',
         },
       },
     },
@@ -88,7 +86,7 @@ export class BoardController {
     return this.boardService.updateBoard(
       id,
       updateBoardDto,
-      updateBoardDto.modify_by,
+      updateBoardDto.modify_by as string,
     );
   }
 

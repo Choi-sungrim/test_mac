@@ -8,9 +8,11 @@ export class BoardComment {
   comment: string;
   @Prop()
   board_num: number;
-  @Prop()
-  create_at: Date;
-  @Prop()
-  modify_at: Date;
+  @Prop({ default: Date.now })
+  create_at?: Date;
+  @Prop({ required: false })
+  modify_by?: string;
+  @Prop({ required: false })
+  modify_at?: Date;
 }
 export const BoardCommentSchema = SchemaFactory.createForClass(BoardComment);

@@ -15,7 +15,6 @@ export class BoardService {
   async createBoard(createBoardDto: Board, userName: string): Promise<Board> {
     const newBoard = new this.boardModel({
       ...createBoardDto,
-      creator: userName,
       create_by: userName,
       create_at: new Date(),
     });

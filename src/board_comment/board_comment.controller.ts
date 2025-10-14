@@ -33,7 +33,6 @@ export class BoardCommentController {
           creator: 'string',
           comment: 'string',
           boardNum: 'number',
-          create_at: 'Date?',
         },
       },
     },
@@ -62,7 +61,6 @@ export class BoardCommentController {
           creator: 'string',
           comment: 'string',
           boardNum: 'number',
-          modify_at: 'Date?',
         },
       },
     },
@@ -89,6 +87,7 @@ export class BoardCommentController {
     return this.boardCommentService.updateBoardComments(
       id,
       updateBoardCommentDto,
+      updateBoardCommentDto.creator,
     );
   }
 

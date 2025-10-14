@@ -13,17 +13,25 @@ export class BoardCommentService {
   async createBoardComments(
     createBoardCommentsDto: BoardComment,
   ): Promise<BoardComment> {
-    const newBoardComments = new this.boardCommentModel(createBoardCommentsDto);
+    const newBoardComments = new this.boardCommentModel({
+      ...createBoardCommentsDto,
+      create_at: new Date(),
+    });
     return await newBoardComments.save();
   }
   async updateBoardComments(
     _id: string,
     updateBoardCommentsDto: BoardComment,
+    userName: string,
   ): Promise<BoardComment> {
     const existingBoardComments =
       await this.boardCommentModel.findByIdAndUpdate(
         _id,
-        updateBoardCommentsDto,
+        {
+          ...updateBoardCommentsDto,
+          modify_by: userName,
+          modify_at: new Date(),
+        },
         { new: true },
       );
     if (!existingBoardComments) {
