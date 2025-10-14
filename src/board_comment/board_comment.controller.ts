@@ -1,0 +1,145 @@
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Put,
+} from '@nestjs/common';
+import { BoardCommentService } from './board_comment.service';
+import { BoardComment } from './board_comment.schema';
+import {
+  ApiBody,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+
+@Controller('board-comment')
+@ApiTags('Board_Comment_CRUD_Service')
+export class BoardCommentController {
+  constructor(private readonly boardCommentService: BoardCommentService) {}
+
+  @Put()
+  @ApiOperation({ summary: 'Update a new BoardComment' })
+  @ApiBody({
+    description: 'The data required id to update a BoardComment.',
+    examples: {
+      a: {
+        summary: 'Example BoardComment Creation',
+        value: {
+          creator: 'string',
+          comment: 'string',
+          boardNum: 'number',
+          create_at: 'Date?',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'BoardComment successfully created',
+    type: BoardComment,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request (e.g., validation failed)',
+  })
+  create(@Body() createBoardCommentDto: BoardComment): Promise<BoardComment> {
+    return this.boardCommentService.createBoardComments(createBoardCommentDto);
+  }
+
+  @Patch(':id')
+  @ApiOperation({ summary: 'Update a new BoardComment' })
+  @ApiBody({
+    description: 'The data required id to update a BoardComment.',
+    examples: {
+      a: {
+        summary: 'Example BoardComment Creation',
+        value: {
+          creator: 'string',
+          comment: 'string',
+          boardNum: 'number',
+          modify_at: 'Date?',
+        },
+      },
+    },
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'The unique ID of the BoardComment to update',
+    type: String,
+    example: '60c72b49c0c9b40015b6d573',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'BoardComment successfully update',
+    type: BoardComment,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request (e.g., validation failed)',
+  })
+  update(
+    @Param('id') id: string,
+    @Body() updateBoardCommentDto: BoardComment,
+  ): Promise<BoardComment> {
+    return this.boardCommentService.updateBoardComments(
+      id,
+      updateBoardCommentDto,
+    );
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'delete a BoardComment' })
+  @ApiParam({
+    name: 'id',
+    description: 'The unique ID of the BoardComment to delete',
+    type: String,
+    example: '60c72b49c0c9b40015b6d573',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'BoardComment successfully delete',
+    type: BoardComment,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request (e.g., validation failed)',
+  })
+  delete(@Param('id') id: string): Promise<BoardComment> {
+    return this.boardCommentService.deleteBoardComments(id);
+  }
+
+  @Get()
+  @ApiOperation({ summary: 'find All BoardComment' })
+  @ApiResponse({
+    status: 201,
+    description: 'BoardComment find successfully',
+    type: BoardComment,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request (e.g., validation failed)',
+  })
+  findAll(): Promise<BoardComment[]> {
+    return this.boardCommentService.getAllBoardComments();
+  }
+
+  @Get(':boardNum')
+  @ApiOperation({ summary: 'find BoardComment by BoardNum' })
+  @ApiResponse({
+    status: 201,
+    description: 'BoardComment find by BoardNum successfully',
+    type: BoardComment,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request (e.g., validation failed)',
+  })
+  findcomment(@Param('boardnum') boardNum: number): Promise<BoardComment[]> {
+    return this.boardCommentService.getBoardComments(boardNum);
+  }
+}
