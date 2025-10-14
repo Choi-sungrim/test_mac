@@ -139,7 +139,10 @@ export class BoardCommentController {
     status: 400,
     description: 'Bad Request (e.g., validation failed)',
   })
-  findcomment(@Param('boardnum') boardNum: number): Promise<BoardComment[]> {
+  //보드 조회시 해당 함수를 같이 요청하여 해당 boardnumber에 해당하는 댓글들을 확인.
+  findcommentByBoard(
+    @Param('boardnum') boardNum: number,
+  ): Promise<BoardComment[]> {
     return this.boardCommentService.getBoardComments(boardNum);
   }
 }
