@@ -16,8 +16,16 @@ export class BoardBaseDTO {
   )
   @IsNotEmpty({ message: '게시글 번호를 입력해야 합니다.' })
   board_num: number;
+}
 
+export class CreateBoardDTO extends BoardBaseDTO {
   @IsString({ message: '내용은 문자열이어야 합니다.' })
   @IsNotEmpty({ message: '현재는 내용을 입력해야 합니다.' })
-  userId: string;
+  create_by: string;
+}
+
+export class UpdateBoardDTO extends BoardBaseDTO {
+  @IsString({ message: '내용은 문자열이어야 합니다.' })
+  @IsNotEmpty({ message: '현재는 내용을 입력해야 합니다.' })
+  modify_by: string;
 }

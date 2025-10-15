@@ -16,7 +16,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { BoardBaseDTO } from './board.dto';
+import { BoardBaseDTO, CreateBoardDTO, UpdateBoardDTO } from './board.dto';
 
 @Controller('board')
 @ApiTags('Board_CRUD_Service')
@@ -34,7 +34,7 @@ export class BoardController {
           title: 'string',
           content: 'string',
           board_num: 'number',
-          userId: 'string',
+          create_by: 'string',
         },
       },
     },
@@ -42,15 +42,18 @@ export class BoardController {
   @ApiResponse({
     status: 201,
     description: '게시글이 성공적으로 생성됨',
-    type: Board,
+    type: CreateBoardDTO,
   })
   @ApiResponse({
     status: 400,
     description: '잘못된 요청 (유효성 검사 실패 등)',
   })
   //request.id 대신 입력 유저 Id
-  create(@Body() createBoardDto: BoardBaseDTO): Promise<Board> {
-    return this.boardService.createBoard(createBoardDto, createBoardDto.userId);
+  create(@Body() createBoardDto: CreateBoardDTO): Promise<CreateBoardDTO> {
+    return this.boardService.createBoard(
+      createBoardDto,
+      createBoardDto.create_by,
+    );
   }
 
   @Patch(':board_num')
@@ -63,7 +66,7 @@ export class BoardController {
         value: {
           content: 'string',
           title: 'string',
-          userId: 'string',
+          modify_by: 'string',
         },
       },
     },
@@ -71,7 +74,7 @@ export class BoardController {
   @ApiResponse({
     status: 201,
     description: 'Board successfully update',
-    type: Board,
+    type: UpdateBoardDTO,
   })
   @ApiResponse({
     status: 400,
@@ -79,12 +82,12 @@ export class BoardController {
   })
   update(
     @Param('boardNum') boardNum: string,
-    @Body() updateBoardDto: BoardBaseDTO,
-  ): Promise<Board> {
+    @Body() updateBoardDto: UpdateBoardDTO,
+  ): Promise<UpdateBoardDTO> {
     return this.boardService.updateBoard(
       boardNum,
       updateBoardDto,
-      updateBoardDto.userId,
+      updateBoardDto.modify_by,
     );
   }
 
@@ -114,13 +117,13 @@ export class BoardController {
   @ApiResponse({
     status: 201,
     description: 'Board Find successfully ',
-    type: Board,
+    type: BoardBaseDTO,
   })
   @ApiResponse({
     status: 400,
     description: 'Bad Request (e.g., validation failed)',
   })
-  findAll(): Promise<Board[]> {
+  findAll(): Promise<BoardBaseDTO[]> {
     return this.boardService.getAllBoards();
   }
 }

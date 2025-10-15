@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Board, BoardDocument } from './board.schema';
 import { BoardComment } from 'src/board_comment/board_comment.schema';
-import { BoardBaseDTO } from './board.dto';
+import { BoardBaseDTO, CreateBoardDTO, UpdateBoardDTO } from './board.dto';
 import { handleDatabaseError } from 'src/utils/common/commonException';
 
 @Injectable()
@@ -15,9 +15,9 @@ export class BoardService {
   ) {}
 
   async createBoard(
-    createBoardDto: BoardBaseDTO,
+    createBoardDto: CreateBoardDTO,
     userId: string,
-  ): Promise<Board> {
+  ): Promise<CreateBoardDTO> {
     const createdBoard = new this.boardModel({
       ...createBoardDto,
       create_by: userId,
@@ -33,7 +33,7 @@ export class BoardService {
         throw new NotFoundException(`Board #${boardNum} already exist`);
       }
 
-      return await createdBoard.save();
+      return (await createdBoard.save()).toObject() as CreateBoardDTO;
     } catch (error) {
       const message = `게시글 생성에 실패했습니다. 데이터 처리 중 서버 오류가 발생했습니다.${error}`;
       handleDatabaseError(error, message);
@@ -42,9 +42,9 @@ export class BoardService {
 
   async updateBoard(
     boardNum: string,
-    updateBoardDto: BoardBaseDTO,
+    updateBoardDto: UpdateBoardDTO,
     userId: string,
-  ): Promise<Board> {
+  ): Promise<UpdateBoardDTO> {
     const updateData: Partial<Board> = {
       ...updateBoardDto,
       modify_by: userId,
@@ -61,14 +61,14 @@ export class BoardService {
         throw new NotFoundException(`Board #${boardNum} not found.`);
       }
 
-      return updatedBoard;
+      return updatedBoard.toObject() as UpdateBoardDTO;
     } catch (error) {
       const message = `게시글 수정에 실패했습니다. 데이터 처리 중 서버 오류가 발생했습니다.${error}`;
       handleDatabaseError(error, message);
     }
   }
 
-  async getAllBoards(): Promise<BoardDocument[]> {
+  async getAllBoards(): Promise<BoardBaseDTO[]> {
     try {
       const BoardData = await this.boardModel.find().exec();
       if (!BoardData || BoardData.length == 0) {
@@ -80,7 +80,7 @@ export class BoardService {
       handleDatabaseError(error, message);
     }
   }
-  async getBoard(boardNum: number): Promise<BoardDocument> {
+  async getBoard(boardNum: number): Promise<BoardBaseDTO> {
     try {
       const existingBoard = await this.boardModel
         .findOne({ board_num: boardNum })

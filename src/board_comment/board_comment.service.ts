@@ -2,7 +2,11 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { BoardComment } from './board_comment.schema';
-import { BoardCommentBaseDTO } from './board_comment.dto';
+import {
+  BoardCommentBaseDTO,
+  CreateBoardCommentDTO,
+  UpdateBoardCommentDTO,
+} from './board_comment.dto';
 import { handleDatabaseError } from 'src/utils/common/commonException';
 
 @Injectable()
@@ -13,16 +17,18 @@ export class BoardCommentService {
   ) {}
 
   async createBoardComments(
-    createBoardCommentsDto: BoardCommentBaseDTO,
+    createBoardCommentsDto: CreateBoardCommentDTO,
     userId: string,
-  ): Promise<BoardComment> {
+  ): Promise<CreateBoardCommentDTO> {
     const newBoardComments = new this.boardCommentModel({
       ...createBoardCommentsDto,
       create_by: userId,
       create_at: new Date(),
     });
     try {
-      return await newBoardComments.save();
+      return (
+        await newBoardComments.save()
+      ).toObject() as CreateBoardCommentDTO;
     } catch (error) {
       const message = `게시글 댓글 생성에 실패했습니다. 데이터 처리 중 서버 오류가 발생했습니다.${error}`;
       handleDatabaseError(error, message);
@@ -30,9 +36,9 @@ export class BoardCommentService {
   }
   async updateBoardComments(
     _id: string,
-    updateBoardCommentsDto: BoardComment,
+    updateBoardCommentsDto: UpdateBoardCommentDTO,
     userId: string,
-  ): Promise<BoardComment> {
+  ): Promise<UpdateBoardCommentDTO> {
     try {
       const existingBoardComments =
         await this.boardCommentModel.findByIdAndUpdate(
@@ -47,13 +53,13 @@ export class BoardCommentService {
       if (!existingBoardComments) {
         throw new NotFoundException(`BoardComments #${_id} not found`);
       }
-      return existingBoardComments;
+      return existingBoardComments.toObject() as UpdateBoardCommentDTO;
     } catch (error) {
       const message = `게시글 댓글 수정에 실패했습니다. 데이터 처리 중 서버 오류가 발생했습니다.${error}`;
       handleDatabaseError(error, message);
     }
   }
-  async getAllBoardComments(): Promise<BoardComment[]> {
+  async getAllBoardComments(): Promise<BoardCommentBaseDTO[]> {
     try {
       const BoardCommentsData = await this.boardCommentModel.find();
       if (!BoardCommentsData || BoardCommentsData.length == 0) {
@@ -65,7 +71,7 @@ export class BoardCommentService {
       handleDatabaseError(error, message);
     }
   }
-  async getBoardComments(BoardNum: number): Promise<BoardComment[]> {
+  async getBoardComments(BoardNum: number): Promise<BoardCommentBaseDTO[]> {
     try {
       const existingBoardComments = await this.boardCommentModel
         .find({

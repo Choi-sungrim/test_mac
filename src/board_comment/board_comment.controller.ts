@@ -16,7 +16,11 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { BoardCommentBaseDTO } from './board_comment.dto';
+import {
+  BoardCommentBaseDTO,
+  CreateBoardCommentDTO,
+  UpdateBoardCommentDTO,
+} from './board_comment.dto';
 
 @Controller('board_comment')
 @ApiTags('Board_Comment_CRUD_Service')
@@ -31,9 +35,9 @@ export class BoardCommentController {
       a: {
         summary: 'Example BoardComment Creation',
         value: {
-          userId: 'string',
           comment: 'string',
           board_num: 'number',
+          create_by: 'string',
         },
       },
     },
@@ -41,18 +45,18 @@ export class BoardCommentController {
   @ApiResponse({
     status: 201,
     description: 'BoardComment successfully created',
-    type: BoardComment,
+    type: CreateBoardCommentDTO,
   })
   @ApiResponse({
     status: 400,
     description: 'Bad Request (e.g., validation failed)',
   })
   create(
-    @Body() createBoardCommentDto: BoardCommentBaseDTO,
-  ): Promise<BoardComment> {
+    @Body() createBoardCommentDto: CreateBoardCommentDTO,
+  ): Promise<CreateBoardCommentDTO> {
     return this.boardCommentService.createBoardComments(
       createBoardCommentDto,
-      createBoardCommentDto.userId,
+      createBoardCommentDto.create_by,
     );
   }
 
@@ -66,7 +70,7 @@ export class BoardCommentController {
         value: {
           comment: 'string',
           boardNum: 'number',
-          userId: 'string',
+          modify_by: 'string',
         },
       },
     },
@@ -80,7 +84,7 @@ export class BoardCommentController {
   @ApiResponse({
     status: 201,
     description: 'BoardComment successfully update',
-    type: BoardComment,
+    type: UpdateBoardCommentDTO,
   })
   @ApiResponse({
     status: 400,
@@ -88,12 +92,12 @@ export class BoardCommentController {
   })
   update(
     @Param('id') id: string,
-    @Body() updateBoardCommentDto: BoardCommentBaseDTO,
-  ): Promise<BoardComment> {
+    @Body() updateBoardCommentDto: UpdateBoardCommentDTO,
+  ): Promise<UpdateBoardCommentDTO> {
     return this.boardCommentService.updateBoardComments(
       id,
       updateBoardCommentDto,
-      updateBoardCommentDto.userId,
+      updateBoardCommentDto.modify_by,
     );
   }
 
@@ -123,13 +127,13 @@ export class BoardCommentController {
   @ApiResponse({
     status: 201,
     description: 'BoardComment find successfully',
-    type: BoardComment,
+    type: BoardCommentBaseDTO,
   })
   @ApiResponse({
     status: 400,
     description: 'Bad Request (e.g., validation failed)',
   })
-  findAll(): Promise<BoardComment[]> {
+  findAll(): Promise<BoardCommentBaseDTO[]> {
     return this.boardCommentService.getAllBoardComments();
   }
 
@@ -138,7 +142,7 @@ export class BoardCommentController {
   @ApiResponse({
     status: 201,
     description: 'BoardComment find by BoardNum successfully',
-    type: BoardComment,
+    type: BoardCommentBaseDTO,
   })
   @ApiResponse({
     status: 400,
@@ -147,7 +151,7 @@ export class BoardCommentController {
   //보드 조회시 해당 함수를 같이 요청하여 해당 boardnumber에 해당하는 댓글들을 확인.
   findcommentByBoard(
     @Param('boardnum') boardNum: number,
-  ): Promise<BoardComment[]> {
+  ): Promise<BoardCommentBaseDTO[]> {
     return this.boardCommentService.getBoardComments(boardNum);
   }
 }
