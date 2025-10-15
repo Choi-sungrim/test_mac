@@ -31,9 +31,9 @@ export class BoardCommentController {
       a: {
         summary: 'Example BoardComment Creation',
         value: {
-          creator: 'string',
+          userId: 'string',
           comment: 'string',
-          boardNum: 'number',
+          board_num: 'number',
         },
       },
     },
