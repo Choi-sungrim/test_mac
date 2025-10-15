@@ -7,7 +7,7 @@ import {
   CreateBoardCommentDTO,
   UpdateBoardCommentDTO,
 } from './board_comment.dto';
-import { handleDatabaseError } from 'src/utils/common/commonException';
+import { handleDatabaseError } from 'src/utils/common/handleDataBaseException';
 
 @Injectable()
 export class BoardCommentService {

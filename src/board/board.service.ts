@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 import { Board, BoardDocument } from './board.schema';
 import { BoardComment } from 'src/board_comment/board_comment.schema';
 import { BoardBaseDTO, CreateBoardDTO, UpdateBoardDTO } from './board.dto';
-import { handleDatabaseError } from 'src/utils/common/commonException';
+import { handleDatabaseError } from 'src/utils/common/handleDataBaseException';
 
 @Injectable()
 export class BoardService {
