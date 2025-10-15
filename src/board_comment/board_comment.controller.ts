@@ -16,16 +16,17 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { BoardCommentBaseDTO } from './board_comment.dto';
 
-@Controller('board-comment')
+@Controller('board_comment')
 @ApiTags('Board_Comment_CRUD_Service')
 export class BoardCommentController {
   constructor(private readonly boardCommentService: BoardCommentService) {}
 
   @Put()
-  @ApiOperation({ summary: 'Update a new BoardComment' })
+  @ApiOperation({ summary: 'create a new BoardComment' })
   @ApiBody({
-    description: 'The data required id to update a BoardComment.',
+    description: 'The data required id to create a BoardComment.',
     examples: {
       a: {
         summary: 'Example BoardComment Creation',
@@ -46,8 +47,13 @@ export class BoardCommentController {
     status: 400,
     description: 'Bad Request (e.g., validation failed)',
   })
-  create(@Body() createBoardCommentDto: BoardComment): Promise<BoardComment> {
-    return this.boardCommentService.createBoardComments(createBoardCommentDto);
+  create(
+    @Body() createBoardCommentDto: BoardCommentBaseDTO,
+  ): Promise<BoardComment> {
+    return this.boardCommentService.createBoardComments(
+      createBoardCommentDto,
+      createBoardCommentDto.userId,
+    );
   }
 
   @Patch(':id')
@@ -58,9 +64,9 @@ export class BoardCommentController {
       a: {
         summary: 'Example BoardComment Creation',
         value: {
-          creator: 'string',
           comment: 'string',
           boardNum: 'number',
+          userId: 'string',
         },
       },
     },
@@ -82,12 +88,12 @@ export class BoardCommentController {
   })
   update(
     @Param('id') id: string,
-    @Body() updateBoardCommentDto: BoardComment,
+    @Body() updateBoardCommentDto: BoardCommentBaseDTO,
   ): Promise<BoardComment> {
     return this.boardCommentService.updateBoardComments(
       id,
       updateBoardCommentDto,
-      updateBoardCommentDto.creator,
+      updateBoardCommentDto.userId,
     );
   }
 

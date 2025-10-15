@@ -16,6 +16,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { BoardBaseDTO } from './board.dto';
 
 @Controller('board')
 @ApiTags('Board_CRUD_Service')
@@ -23,38 +24,36 @@ export class BoardController {
   constructor(private readonly boardService: BoardService) {}
 
   @Put()
-  @ApiOperation({ summary: 'Create a new Board' })
+  @ApiOperation({ summary: 'create a new Board' })
   @ApiBody({
-    description: 'The data required id to create a Board.',
+    description: 'The data required id to create a Board',
     examples: {
       a: {
         summary: 'Example Board Creation',
         value: {
-          boardNum: 'number',
-          content: 'string',
           title: 'string',
-          create_by: 'string',
+          content: 'string',
+          board_num: 'number',
+          userId: 'string',
         },
       },
     },
   })
   @ApiResponse({
     status: 201,
-    description: 'Board successfully created',
+    description: '게시글이 성공적으로 생성됨',
     type: Board,
   })
   @ApiResponse({
     status: 400,
-    description: 'Bad Request (e.g., validation failed)',
+    description: '잘못된 요청 (유효성 검사 실패 등)',
   })
-  create(@Body() createBoardDto: Board): Promise<Board> {
-    return this.boardService.createBoard(
-      createBoardDto,
-      createBoardDto.create_by,
-    );
+  //request.id 대신 입력 유저 Id
+  create(@Body() createBoardDto: BoardBaseDTO): Promise<Board> {
+    return this.boardService.createBoard(createBoardDto, createBoardDto.userId);
   }
 
-  @Patch(':id')
+  @Patch(':board_num')
   @ApiOperation({ summary: 'Update a new Board' })
   @ApiBody({
     description: 'The data required id to update a Board.',
@@ -62,10 +61,9 @@ export class BoardController {
       a: {
         summary: 'Example Board Creation',
         value: {
-          boardNum: 'number',
           content: 'string',
           title: 'string',
-          modify_by: 'string',
+          userId: 'string',
         },
       },
     },
@@ -80,23 +78,23 @@ export class BoardController {
     description: 'Bad Request (e.g., validation failed)',
   })
   update(
-    @Param('id') id: string,
-    @Body() updateBoardDto: Board,
+    @Param('boardNum') boardNum: string,
+    @Body() updateBoardDto: BoardBaseDTO,
   ): Promise<Board> {
     return this.boardService.updateBoard(
-      id,
+      boardNum,
       updateBoardDto,
-      updateBoardDto.modify_by as string,
+      updateBoardDto.userId,
     );
   }
 
-  @Delete(':id')
+  @Delete(':board_num')
   @ApiOperation({ summary: 'delete a Board' })
   @ApiParam({
-    name: 'id',
-    description: 'The unique ID of the Board to delete',
+    name: 'board_num',
+    description: 'The unique board_num of the Board to delete',
     type: String,
-    example: '60c72b49c0c9b40015b6d573',
+    example: '0',
   })
   @ApiResponse({
     status: 201,
@@ -107,8 +105,8 @@ export class BoardController {
     status: 400,
     description: 'Bad Request (e.g., validation failed)',
   })
-  delete(@Param('id') id: string): Promise<Board> {
-    return this.boardService.deleteBoard(id);
+  delete(@Param('board_num') boardNum: number): Promise<Board> {
+    return this.boardService.deleteBoard(boardNum);
   }
 
   @Get()

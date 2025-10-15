@@ -11,7 +11,7 @@ export class Board {
   @Prop()
   title: string;
   @Prop()
-  create_by: string;
+  create_by?: string;
   @Prop({ required: false })
   modify_by?: string;
   @Prop({ default: Date.now })

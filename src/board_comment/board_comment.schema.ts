@@ -3,11 +3,11 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 @Schema()
 export class BoardComment {
   @Prop()
-  creator: string;
-  @Prop()
   comment: string;
   @Prop()
   board_num: number;
+  @Prop()
+  create_by?: string;
   @Prop({ default: Date.now })
   create_at?: Date;
   @Prop({ required: false })
