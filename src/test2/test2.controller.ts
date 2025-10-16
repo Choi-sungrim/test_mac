@@ -6,7 +6,7 @@ import { Test2 } from './test2.schema';
 export class Test2Controller {
   constructor(private readonly test2Service: Test2Service) {}
 
-  @Put()
+  @Post()
   create(@Body() createTest2Dto: Test2): Promise<Test2> {
     return this.test2Service.createTest2(createTest2Dto);
   }
