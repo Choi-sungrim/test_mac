@@ -27,7 +27,7 @@ import {
 export class BoardCommentController {
   constructor(private readonly boardCommentService: BoardCommentService) {}
 
-  @Put()
+  @Post()
   @ApiOperation({ summary: 'create a new BoardComment' })
   @ApiBody({
     description: 'The data required id to create a BoardComment.',

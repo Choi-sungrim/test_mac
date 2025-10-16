@@ -22,7 +22,7 @@ import {
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Put()
+  @Post()
   @ApiOperation({ summary: 'Create a new user' })
   @ApiBody({
     description: 'The data required to create a new user.',

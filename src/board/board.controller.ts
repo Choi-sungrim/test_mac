@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Patch,
+  Post,
   Put,
 } from '@nestjs/common';
 import { BoardService } from './board.service';
@@ -23,7 +24,7 @@ import { BoardBaseDTO, CreateBoardDTO, UpdateBoardDTO } from './board.dto';
 export class BoardController {
   constructor(private readonly boardService: BoardService) {}
 
-  @Put()
+  @Post()
   @ApiOperation({ summary: 'create a new Board' })
   @ApiBody({
     description: 'The data required id to create a Board',
