@@ -50,6 +50,8 @@ export class BoardController {
     description: '잘못된 요청 (유효성 검사 실패 등)',
   })
   //request.id 대신 입력 유저 Id
+  //고유하게 사용할 board_num정보를 수신하기에 기존 PUT으로 사용. -> 생성 목적에 맞는 POST로 교체.
+  //새로운 리소스 추가형식. , 동일 자원 검토?
   create(@Body() createBoardDto: CreateBoardDTO): Promise<CreateBoardDTO> {
     return this.boardService.createBoard(
       createBoardDto,
