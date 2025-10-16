@@ -54,7 +54,7 @@ export class BoardCommentController {
   })
   //request.id 대신 입력 유저 Id
   //고유하게 사용할 board_num정보를 입력받기에 기존 PUT으로 사용. -> 생성 목적에 맞는 POST로 교체.
-  //새로운 리소스 추가형식으로 개선
+  //새로운 리소스 추가형식으로 개선.
   create(
     @Body() createBoardCommentDto: CreateBoardCommentDTO,
   ): Promise<CreateBoardCommentDTO> {
